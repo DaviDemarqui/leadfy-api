@@ -1,104 +1,93 @@
-CREATE TABLE `user`(
+CREATE TABLE IF NOT EXISTS `user`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `username` VARCHAR(255) NOT NULL,
     `password` VARCHAR(255) NOT NULL,
     `cpf` VARCHAR(255) NOT NULL,
     `email` VARCHAR(255) NOT NULL
 );
-CREATE TABLE `company`(
+CREATE TABLE IF NOT EXISTS `company`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
     `logo` BLOB NULL,
     `email` VARCHAR(255) NOT NULL,
     `industry` VARCHAR(255) NULL,
     `phone` VARCHAR(255) NOT NULL,
-    `created` DATETIME NOT NULL,
-    `cnpj` BIGINT NOT NULL,
+    `created_on` DATETIME NOT NULL,
+    `cnpj` VARCHAR(255) NOT NULL,
     `address` VARCHAR(255) NOT NULL
 );
-CREATE TABLE `profile`(
+CREATE TABLE IF NOT EXISTS `task`(
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL,
+    `details` VARCHAR(255) NOT NULL,
+    `priority` VARCHAR(255) NOT NULL,
+    `created_by` BIGINT UNSIGNED NOT NULL,
+    `assign_to` BIGINT UNSIGNED NOT NULL,
+    `due_date` DATETIME NOT NULL,
+    `status` TINYINT(1) NOT NULL,
+    `project_id` BIGINT UNSIGNED NOT NULL
+);
+CREATE TABLE IF NOT EXISTS `profile`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NULL,
     `email` VARCHAR(255) NOT NULL,
-    `company_role` VARCHAR(255) NULL,
+    `company_role` VARCHAR(255) NOT NULL,
     `user_id` BIGINT UNSIGNED NOT NULL,
-    `privileges` BIGINT NULL,
     `profile_pic` BLOB NULL,
-    `company_id` BIGINT UNSIGNED NOT NULL
+    `company_id` BIGINT UNSIGNED NOT NULL,
+    `status` VARCHAR(255) NOT NULL,
+    `team_id` BIGINT UNSIGNED NOT NULL
 );
-CREATE TABLE `review`(
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `rating` INT NOT NULL,
-    `comment` VARCHAR(255) NOT NULL,
-    `review_date` DATETIME NOT NULL,
-    `customer_id` BIGINT UNSIGNED NOT NULL,
-    `company_id` BIGINT UNSIGNED NOT NULL
-);
-CREATE TABLE `staff_profile`(
+CREATE TABLE IF NOT EXISTS `team`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
-    `phone` VARCHAR(255) NOT NULL,
-    `address` VARCHAR(255) NOT NULL,
-    `created` DATETIME NOT NULL,
-    `company_id` BIGINT UNSIGNED NOT NULL,
-    `profile_pic` BLOB NULL,
-    `user_id` BIGINT UNSIGNED NOT NULL
+    `project_id` BIGINT UNSIGNED NOT NULL
 );
-CREATE TABLE `service`(
+CREATE TABLE IF NOT EXISTS `client`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
     `description` VARCHAR(255) NULL,
-    `duration` INT NOT NULL,
-    `company_id` BIGINT UNSIGNED NOT NULL,
-    `customer_id` BIGINT UNSIGNED NOT NULL,
-    `staff_id` BIGINT UNSIGNED NOT NULL
+    `photo` BLOB NULL,
+    `email` VARCHAR(255) NULL,
+    `phone` VARCHAR(255) NOT NULL,
+    `invite_message` VARCHAR(255) NOT NULL,
+    `project_id` BIGINT UNSIGNED NOT NULL
 );
-CREATE TABLE `appointment`(
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `start_time` DATETIME NOT NULL,
-    `end_time` DATETIME NOT NULL,
-    `customer_id` BIGINT UNSIGNED NOT NULL,
-    `service_id` BIGINT UNSIGNED NOT NULL,
-    `staff_id` BIGINT UNSIGNED NOT NULL,
-    `company_id` BIGINT UNSIGNED NOT NULL
-);
-CREATE TABLE `privilegies`(
+CREATE TABLE IF NOT EXISTS `privilegies`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL
 );
-CREATE TABLE `customer_profile`(
+CREATE TABLE IF NOT EXISTS `project`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
-    `phone` VARCHAR(255) NOT NULL,
-    `address` VARCHAR(255) NOT NULL,
-    `email` VARCHAR(255) NOT NULL,
-    `created` DATETIME NOT NULL,
-    `profile_pic` BLOB NULL,
-    `user_id` BIGINT UNSIGNED NOT NULL
+    `description` VARCHAR(255) NULL,
+    `due_date` DATETIME NOT NULL,
+    `ongoing` TINYINT(1) NOT NULL,
+    `created_on` DATETIME NOT NULL,
+    `status` TINYINT(1) NOT NULL,
+    `company_id` BIGINT UNSIGNED NOT NULL
 );
-ALTER TABLE
-    `appointment` ADD CONSTRAINT `appointment_company_id_foreign` FOREIGN KEY(`company_id`) REFERENCES `company`(`id`);
-ALTER TABLE
-    `staff_profile` ADD CONSTRAINT `staff_profile_user_id_foreign` FOREIGN KEY(`user_id`) REFERENCES `user`(`id`);
-ALTER TABLE
-    `customer_profile` ADD CONSTRAINT `customer_profile_user_id_foreign` FOREIGN KEY(`user_id`) REFERENCES `user`(`id`);
-ALTER TABLE
-    `staff_profile` ADD CONSTRAINT `staff_profile_company_id_foreign` FOREIGN KEY(`company_id`) REFERENCES `company`(`id`);
-ALTER TABLE
-    `review` ADD CONSTRAINT `review_company_id_foreign` FOREIGN KEY(`company_id`) REFERENCES `company`(`id`);
-ALTER TABLE
-    `service` ADD CONSTRAINT `service_customer_id_foreign` FOREIGN KEY(`customer_id`) REFERENCES `customer_profile`(`id`);
-ALTER TABLE
-    `service` ADD CONSTRAINT `service_staff_id_foreign` FOREIGN KEY(`staff_id`) REFERENCES `staff_profile`(`id`);
-ALTER TABLE
-    `service` ADD CONSTRAINT `service_company_id_foreign` FOREIGN KEY(`company_id`) REFERENCES `company`(`id`);
+CREATE TABLE IF NOT EXISTS `note`(
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `title` VARCHAR(255) NOT NULL,
+    `text` VARCHAR(255) NOT NULL,
+    `created_by` BIGINT NOT NULL,
+    `created_on` DATETIME NOT NULL,
+    `project_id` BIGINT UNSIGNED NOT NULL
+);
 ALTER TABLE
     `profile` ADD CONSTRAINT `profile_user_id_foreign` FOREIGN KEY(`user_id`) REFERENCES `user`(`id`);
 ALTER TABLE
-    `review` ADD CONSTRAINT `review_customer_id_foreign` FOREIGN KEY(`customer_id`) REFERENCES `customer_profile`(`id`);
+    `client` ADD CONSTRAINT `client_project_id_foreign` FOREIGN KEY(`project_id`) REFERENCES `project`(`id`);
 ALTER TABLE
-    `appointment` ADD CONSTRAINT `appointment_customer_id_foreign` FOREIGN KEY(`customer_id`) REFERENCES `customer_profile`(`id`);
+    `note` ADD CONSTRAINT `note_project_id_foreign` FOREIGN KEY(`project_id`) REFERENCES `project`(`id`);
+ALTER TABLE
+    `task` ADD CONSTRAINT `task_project_id_foreign` FOREIGN KEY(`project_id`) REFERENCES `project`(`id`);
 ALTER TABLE
     `profile` ADD CONSTRAINT `profile_company_id_foreign` FOREIGN KEY(`company_id`) REFERENCES `company`(`id`);
 ALTER TABLE
-    `appointment` ADD CONSTRAINT `appointment_staff_id_foreign` FOREIGN KEY(`staff_id`) REFERENCES `staff_profile`(`id`);
+    `profile` ADD CONSTRAINT `profile_team_id_foreign` FOREIGN KEY(`team_id`) REFERENCES `team`(`id`);
+ALTER TABLE
+    `project` ADD CONSTRAINT `project_company_id_foreign` FOREIGN KEY(`company_id`) REFERENCES `company`(`id`);
+ALTER TABLE
+    `team` ADD CONSTRAINT `team_project_id_foreign` FOREIGN KEY(`project_id`) REFERENCES `project`(`id`);
