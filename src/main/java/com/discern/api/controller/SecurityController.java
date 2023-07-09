@@ -1,5 +1,7 @@
 package com.discern.api.controller;
 
+import com.discern.api.dto.OwnerRegistrationDTO;
+import com.discern.api.dto.TokenDTO;
 import com.discern.api.model.User;
 import com.discern.api.service.UserService;
 import com.discern.api.security.JwtUtil;
@@ -32,7 +34,7 @@ public class SecurityController {
     private final JwtUtil jwtUtil;
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<Map<String, String>> authenticate(@RequestBody MultiValueMap<String, String> formData) {
+    public ResponseEntity<?> authenticate(@RequestBody MultiValueMap<String, String> formData) {
         String email = UriUtils.decode(formData.getFirst("email"), StandardCharsets.UTF_8);
         String password = UriUtils.decode(formData.getFirst("password"), StandardCharsets.UTF_8);
 
@@ -47,12 +49,9 @@ public class SecurityController {
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
         if (userDetails != null) {
-            String token = jwtUtil.generateToken(userDetails);
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setBearerAuth(token);
-
-            return ResponseEntity.ok().headers(headers).build();
+            TokenDTO tokenDTO = new TokenDTO();
+            tokenDTO.setToken(jwtUtil.generateToken(userDetails));
+            return ResponseEntity.ok().body(tokenDTO);
         }
 
         Map<String, String> errorResponse = new HashMap<>();
@@ -61,8 +60,8 @@ public class SecurityController {
     }
 
 
-    @PostMapping("/registration")
-    public ResponseEntity<?> registrateUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.registration(user));
+    @PostMapping("/create-account")
+    public ResponseEntity<?> registrateUser(@RequestBody OwnerRegistrationDTO ownerRegistrationDTO) {
+        return ResponseEntity.ok(userService.registration(ownerRegistrationDTO));
     }
 }

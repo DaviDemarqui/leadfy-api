@@ -41,4 +41,11 @@ public class Profile {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Column
+    private Long companyId;
+
+    @Column
+    private Boolean status;
+
 }

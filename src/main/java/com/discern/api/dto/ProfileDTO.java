@@ -18,8 +18,10 @@ public class ProfileDTO {
     private Long id;
     private byte[] profilePic;
     private String name;
-    private String username;
-    private String role;
+    private String email;
+    private String company_role;
     private UserDTO user;
+    private Long companyId;
+    private Boolean status;
 
 }

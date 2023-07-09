@@ -2,6 +2,7 @@ package com.discern.api.dto;
 
 import lombok.*;
 
+import javax.persistence.Column;
 import java.util.Date;
 
 /**
@@ -20,7 +21,5 @@ public class UserDTO {
     private String email;
     private String username;
     private String password;
-    private boolean status;
-    private Date createdAt;
-    private Date updatedAt;
+    private String cpf;
 }

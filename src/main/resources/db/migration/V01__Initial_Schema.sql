@@ -35,13 +35,19 @@ CREATE TABLE IF NOT EXISTS `profile`(
     `user_id` BIGINT UNSIGNED NOT NULL,
     `profile_pic` BLOB NULL,
     `company_id` BIGINT UNSIGNED NOT NULL,
-    `status` VARCHAR(255) NOT NULL,
-    `team_id` BIGINT UNSIGNED NOT NULL
+    `status` TINYINT(1) NOT NULL
 );
 CREATE TABLE IF NOT EXISTS `team`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
     `project_id` BIGINT UNSIGNED NOT NULL
+);
+CREATE TABLE IF NOT EXISTS `profile_team` (
+    `profile_id` BIGINT UNSIGNED NOT NULL,
+    `team_id` BIGINT UNSIGNED NOT NULL,
+    PRIMARY KEY (`profile_id`, `team_id`),
+    FOREIGN KEY (`profile_id`) REFERENCES `profile`(`id`),
+    FOREIGN KEY (`team_id`) REFERENCES `team`(`id`)
 );
 CREATE TABLE IF NOT EXISTS `client`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -85,8 +91,6 @@ ALTER TABLE
     `task` ADD CONSTRAINT `task_project_id_foreign` FOREIGN KEY(`project_id`) REFERENCES `project`(`id`);
 ALTER TABLE
     `profile` ADD CONSTRAINT `profile_company_id_foreign` FOREIGN KEY(`company_id`) REFERENCES `company`(`id`);
-ALTER TABLE
-    `profile` ADD CONSTRAINT `profile_team_id_foreign` FOREIGN KEY(`team_id`) REFERENCES `team`(`id`);
 ALTER TABLE
     `project` ADD CONSTRAINT `project_company_id_foreign` FOREIGN KEY(`company_id`) REFERENCES `company`(`id`);
 ALTER TABLE

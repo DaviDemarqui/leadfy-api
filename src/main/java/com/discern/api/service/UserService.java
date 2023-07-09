@@ -1,12 +1,19 @@
 package com.discern.api.service;
 
+import com.discern.api.dto.OwnerRegistrationDTO;
+import com.discern.api.dto.ProfileDTO;
+import com.discern.api.model.Company;
 import com.discern.api.model.User;
+import com.discern.api.repository.CompanyRepository;
 import com.discern.api.repository.UserRepository;
 import com.discern.api.model.Profile;
 import com.discern.api.repository.ProfileRepository;
+import com.discern.api.utils.mapper.MapperUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -14,15 +21,34 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
+    private final CompanyRepository companyRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MapperUtil mapperUtil;
 
-    public User registration(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+    public ProfileDTO registration(OwnerRegistrationDTO ownerRegistrationDTO) {
+
+        User user = mapperUtil.mapTo(ownerRegistrationDTO.getUserDTO(), User.class);
+        user.setPassword(passwordEncoder.encode(ownerRegistrationDTO.getUserDTO().getPassword()));
+        userRepository.save(user); // Save the user
+
+        Company company = mapperUtil.mapTo(ownerRegistrationDTO.getCompanyDTO(), Company.class);
+        if(company.getCreatedOn() == null) { // Verifying the company date;
+            company.setCreatedOn(LocalDateTime.now());
+        }
+        companyRepository.save(company); // Save the company
+
         Profile profile = new Profile();
         profile.setUser(user);
-        profileRepository.save(profile);
-        return user;
+        profile.setEmail(user.getEmail());
+        profile.setName(user.getUsername());
+        profile.setCompany_role("OWNER");
+        profile.setCompanyId(company.getId());
+        profile.setStatus(true);
+
+        profileRepository.save(profile); // Save the profile
+
+        // Return profileDTO
+        return mapperUtil.mapTo(profile, ProfileDTO.class);
     }
 
 }
