@@ -35,4 +35,7 @@ public class Note {
 
     @Column
     private Long projectId;
+
+    @Column
+    private Long companyId;
 }

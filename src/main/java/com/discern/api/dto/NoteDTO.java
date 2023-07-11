@@ -17,4 +17,6 @@ public class NoteDTO {
     private Long createdBy;
     private LocalDateTime createdOn;
     private Long projectId;
+    private Long companyId;
+
 }
