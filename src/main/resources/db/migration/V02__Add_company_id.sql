@@ -18,3 +18,5 @@ ADD COLUMN `company_id` BIGINT UNSIGNED NOT NULL;
 -- Add company_id column to note table
 ALTER TABLE `note`
 ADD COLUMN `company_id` BIGINT UNSIGNED NOT NULL;
+
+ALTER TABLE client DROP COLUMN invite_message;

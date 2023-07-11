@@ -18,7 +18,7 @@ public class ClientController {
     // TODO - Ajustar company_id para seguir com a validação!
 
     @GetMapping
-    public ResponseEntity<?> getAllClients(ClientDTO clientDTO, Pageable pageable, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> getAllClients(ClientDTO clientDTO, Pageable pageable) {
 //        tokenVerifyingService.validateCompanyId(token, clientDTO.getCompanyId());
         return ResponseEntity.ok(clientService.getAllClients(clientDTO, pageable));
     }
