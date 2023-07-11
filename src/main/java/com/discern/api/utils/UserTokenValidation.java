@@ -14,7 +14,7 @@ public class UserTokenValidation {
     private final JwtUtil jwtUtil;
 
     public User findUserByToken(String token) {
-        User user = userRepository.findByEmail(jwtUtil.extractUsername(token));
+        User user = userRepository.findByEmail(jwtUtil.extractEmail(token));
         if(user == null) {
             throw new RuntimeException("User not found");
         }

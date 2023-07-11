@@ -39,4 +39,7 @@ public class Client {
 
     @Column
     private Long projectId;
+
+    @Column
+    private Long companyId;
 }

@@ -10,37 +10,37 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/cores")
+@RequestMapping("api/v1/clients")
 public class ClientController {
 
     private final ClientService clientService;
-//    private final TokenVerifyingService tokenVerifyingService;
+    private final TokenVerifyingService tokenVerifyingService;
     // TODO - Ajustar company_id para seguir com a validação!
 
     @GetMapping
-    public ResponseEntity<?> getAllCores(ClientDTO clientDTO, Pageable pageable, @RequestHeader("Authorization") String token) {
-//        tokenVerifyingService.decodeToGetCompanyId(token);
+    public ResponseEntity<?> getAllClients(ClientDTO clientDTO, Pageable pageable, @RequestHeader("Authorization") String token) {
+//        tokenVerifyingService.validateCompanyId(token, clientDTO.getCompanyId());
         return ResponseEntity.ok(clientService.getAllClients(clientDTO, pageable));
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<?> getAllCores(@PathVariable Long id) {
+    public ResponseEntity<?> getAllClients(@PathVariable Long id) {
         return ResponseEntity.ok(clientService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<?> postCor(@RequestBody ClientDTO clientDTO, @RequestHeader("Authorization") String token) {
-//        tokenVerifyingService.verifyUserCompanyId(clientDTO., token);
+    public ResponseEntity<?> postClient(@RequestBody ClientDTO clientDTO, @RequestHeader("Authorization") String token) {
+        tokenVerifyingService.validateCompanyId(token, clientDTO.getCompanyId());
         return ResponseEntity.ok(clientService.saveOrUpdate(clientDTO, null));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> putCor(@PathVariable Long id, @RequestBody ClientDTO clientDTO) {
+    public ResponseEntity<?> putClient(@PathVariable Long id, @RequestBody ClientDTO clientDTO) {
         return ResponseEntity.ok(clientService.saveOrUpdate(clientDTO, id));
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteCor(@PathVariable Long id) {
+    public ResponseEntity<?> deleteClient(@PathVariable Long id) {
         clientService.deleteClient(id);
         return ResponseEntity.noContent().build();
     }

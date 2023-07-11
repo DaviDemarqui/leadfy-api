@@ -23,4 +23,6 @@ public class ClientDTO {
     private String inviteMessage;
 
     private Long projectId;
+
+    private Long companyId;
 }

@@ -2,7 +2,10 @@ package com.discern.api.controller;
 
 import com.discern.api.dto.OwnerRegistrationDTO;
 import com.discern.api.dto.TokenDTO;
+import com.discern.api.model.Profile;
 import com.discern.api.model.User;
+import com.discern.api.repository.ProfileRepository;
+import com.discern.api.repository.UserRepository;
 import com.discern.api.service.UserService;
 import com.discern.api.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +32,7 @@ import java.util.Map;
 public class SecurityController {
 
     private final AuthenticationManager authenticationManager;
+    private final ProfileRepository profileRepository;
     private final UserDetailsService userDetailsService;
     private final UserService userService;
     private final JwtUtil jwtUtil;
@@ -46,11 +50,12 @@ public class SecurityController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
         }
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+//        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        Profile profile = profileRepository.findProfileByEmail(email);
 
-        if (userDetails != null) {
+        if (profile != null) {
             TokenDTO tokenDTO = new TokenDTO();
-            tokenDTO.setToken(jwtUtil.generateToken(userDetails));
+            tokenDTO.setToken(jwtUtil.generateToken(profile.getCompanyId(), email, profile.getUser().getId()));
             return ResponseEntity.ok().body(tokenDTO);
         }
 

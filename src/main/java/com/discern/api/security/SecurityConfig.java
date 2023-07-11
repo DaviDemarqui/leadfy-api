@@ -2,6 +2,7 @@ package com.discern.api.security;
 
 import com.discern.api.dao.UserDao;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.filters.CorsFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 /**
  * @Author Davi Demarqui
@@ -46,8 +48,6 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
-    //TODO - O filtro não deve estar pegando o email para encontrar o user - Dar uma olhada dps;
 
     @Bean
     public AuthenticationProvider authenticationProvider() {

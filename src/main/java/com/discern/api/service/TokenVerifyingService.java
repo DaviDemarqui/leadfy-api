@@ -2,6 +2,7 @@ package com.discern.api.service;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.discern.api.security.JwtHelper;
+import com.discern.api.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import javax.transaction.Transactional;
 public class TokenVerifyingService {
 
     private final JwtHelper jwtHelper;
+    private final JwtUtil jwtUtil;
 
     public String decoderCompany(String token) {
         token = token.replace("Bearer ", "");
@@ -31,22 +33,13 @@ public class TokenVerifyingService {
         return decodedJWT.getClaim(JwtHelper.CLAIM_USER).asString();
     }
 
-    public void verifyUserCompanyId(Long companyId, String token) {
+    public void validateCompanyId(String token, Long companyId) {
         token = token.replace("Bearer ", "");
-        DecodedJWT decodedJWT = jwtHelper.decodeJwtToken(token);
-        String companyToken = decoderUser(token);
+        Long companyIdFromToken = jwtUtil.extractCompanyId(token).longValue();
 
-        if (!companyId.toString().equals(companyToken)) {
-            throw new RuntimeException("Invalid Company!");
+        if(companyIdFromToken != companyId) {
+            throw new RuntimeException("Token Error: Company Id not Match");
         }
-    }
-
-    public Long decodeToGetCompanyId(String token) {
-        token = token.replace("Bearer ", "");
-        DecodedJWT decodedJWT = jwtHelper.decodeJwtToken(token);
-        Long companyIdToken = decodedJWT.getClaim(JwtHelper.CLAIM_COMPANY_ID).asLong();
-
-        return companyIdToken;
     }
 
 //    public void verificaEmpresaUsuario(Long idEmpresa, String token) {

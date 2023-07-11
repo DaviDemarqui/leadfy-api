@@ -1,6 +1,8 @@
 package com.discern.api.security;
 
 import com.discern.api.dao.UserDao;
+import com.discern.api.model.User;
+import com.discern.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +28,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final UserDao userDao;
+    private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
     @Override
@@ -40,12 +43,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         jwtToken = authHeader.substring(7);
-        userEmail = jwtUtil.extractUsername(jwtToken);
+        userEmail = jwtUtil.extractEmail(jwtToken);
         if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDao.findByUserEmail(userEmail);
-            if(jwtUtil.validateToken(jwtToken, userDetails)) {
+//            UserDetails userDetails = userDao.findByUserEmail(userEmail);
+            User user = userRepository.findByEmail(userEmail);
+            if(jwtUtil.validateToken(jwtToken, user)) {
                 UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                        new UsernamePasswordAuthenticationToken(user, null, null);
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
