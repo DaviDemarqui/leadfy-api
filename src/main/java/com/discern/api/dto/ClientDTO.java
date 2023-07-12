@@ -20,8 +20,6 @@ public class ClientDTO {
 
     private String phone;
 
-    private String inviteMessage;
-
     private Long projectId;
 
     private Long companyId;

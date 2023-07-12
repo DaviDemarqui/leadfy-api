@@ -13,4 +13,6 @@ public class TeamDTO {
     private Long id;
     private String name;
     private Long projectId;
+    private Long companyId;
+
 }

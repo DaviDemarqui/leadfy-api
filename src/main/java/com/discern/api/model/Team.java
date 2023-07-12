@@ -24,4 +24,7 @@ public class Team {
 
     @Column
     private Long projectId;
+
+    @Column
+    private Long companyId;
 }

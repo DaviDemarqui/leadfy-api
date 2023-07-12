@@ -26,9 +26,6 @@ public class Client {
     private String description;
 
     @Column
-    private byte[] photo;
-
-    @Column
     private String email;
 
     @Column

@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 
 @Entity
@@ -28,13 +28,13 @@ public class Project {
     private String description;
 
     @Column
-    private LocalDateTime dueDate;
+    private LocalDate dueDate;
 
     @Column
     private Boolean ongoing;
 
     @Column
-    private LocalDateTime createdOn;
+    private LocalDate createdOn;
 
     @Column
     private Boolean status;

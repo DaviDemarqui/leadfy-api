@@ -6,16 +6,25 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+
+/**
+ * @author Davi
+ * @created 12/jul./2023
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectDTO {
-    private Long id;
+public class ProjectCreationDTO {
+
     private String name;
-    private String description;
+    private String brief;
+    private String members;
+    private String tag;
+    private Boolean status;
     private LocalDate dueDate;
     private Boolean ongoing;
-    private LocalDate createdOn;
-    private Boolean status;
+
     private Long companyId;
+
 }

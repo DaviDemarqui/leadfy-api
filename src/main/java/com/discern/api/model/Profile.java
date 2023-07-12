@@ -25,10 +25,6 @@ public class Profile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
-    @Column(name = "profile_pic")
-    private byte[] profilePic;
-
     @Column
     private String name;
 

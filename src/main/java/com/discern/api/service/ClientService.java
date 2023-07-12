@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.discern.api.exceptions.ClientNotFoundException;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -55,10 +56,10 @@ public class ClientService {
             Project project = new Project();
             project.setCompanyId(clientDTO.getCompanyId());
             project.setStatus(true);
-            project.setCreatedOn(LocalDateTime.now());
+            project.setCreatedOn(LocalDate.now());
             project.setName(clientDTO.getName());
             project.setOngoing(true);
-            project.setDueDate(LocalDateTime.now().plusWeeks(1));
+            project.setDueDate(LocalDate.now().plusWeeks(1));
 
             projectRepository.save(project);
             clientSave = mapperUtil.mapTo(clientDTO, Client.class);
