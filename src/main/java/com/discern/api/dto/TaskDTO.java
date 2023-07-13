@@ -30,4 +30,6 @@ public class TaskDTO {
     private Boolean status;
 
     private Long projectId;
+
+    private Long companyId;
 }

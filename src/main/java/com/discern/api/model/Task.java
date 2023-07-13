@@ -45,4 +45,7 @@ public class Task {
 
     @Column
     private Long projectId;
+
+    @Column
+    private Long companyId;
 }
