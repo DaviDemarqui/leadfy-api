@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -38,7 +39,10 @@ public class Task {
     private Long assignTo;
 
     @Column
-    private LocalDateTime dueDate;
+    private LocalDate dueDate;
+
+    @Column
+    private LocalDate createdAt;
 
     @Column
     private Boolean status;

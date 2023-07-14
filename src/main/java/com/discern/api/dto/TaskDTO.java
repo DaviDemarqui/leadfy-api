@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Enumerated;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -25,7 +26,9 @@ public class TaskDTO {
 
     private Long assignTo;
 
-    private LocalDateTime dueDate;
+    private LocalDate dueDate;
+
+    private LocalDate createdAt;
 
     private Boolean status;
 
