@@ -30,7 +30,7 @@ public class TaskDTO {
 
     private LocalDate createdAt;
 
-    private Boolean status;
+    private String status;
 
     private Long projectId;
 

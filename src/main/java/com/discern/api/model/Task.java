@@ -45,7 +45,7 @@ public class Task {
     private LocalDate createdAt;
 
     @Column
-    private Boolean status;
+    private String status;
 
     @Column
     private Long projectId;
