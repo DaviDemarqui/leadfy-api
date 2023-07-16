@@ -1,6 +1,7 @@
 package com.discern.api.model;
 
 
+import com.discern.api.enums.NoteType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,10 @@ public class Note {
 
     @Column
     private String text;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private NoteType noteType;
 
     @Column
     private Long createdBy;

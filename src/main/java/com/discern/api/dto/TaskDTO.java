@@ -1,10 +1,12 @@
 package com.discern.api.dto;
 
 import com.discern.api.enums.Priority;
+import com.discern.api.enums.TaskStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,7 +21,7 @@ public class TaskDTO {
 
     private String details;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Priority priority;
 
     private Long createdBy;
@@ -30,7 +32,8 @@ public class TaskDTO {
 
     private LocalDate createdAt;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status;
 
     private Long projectId;
 

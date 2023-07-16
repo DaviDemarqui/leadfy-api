@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `team`(
     `name` VARCHAR(255) NOT NULL,
     `project_id` BIGINT UNSIGNED NOT NULL
 );
-CREATE TABLE IF NOT EXISTS `profile_team` (
+CREATE TABLE IF NOT EXISTS `team_member` (
     `profile_id` BIGINT UNSIGNED NOT NULL,
     `team_id` BIGINT UNSIGNED NOT NULL,
     PRIMARY KEY (`profile_id`, `team_id`),

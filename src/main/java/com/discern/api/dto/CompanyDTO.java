@@ -1,5 +1,6 @@
 package com.discern.api.dto;
 
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,19 +14,16 @@ public class CompanyDTO {
 
     private Long id;
 
+    @NotNull
     private String name;
-
-    private byte[] logo;
-
-    private String email;
 
     private String industry;
 
+    @NotNull
     private String phone;
 
     private LocalDateTime createdOn;
 
-    private String cnpj;
-
+    @NotNull
     private String address;
 }

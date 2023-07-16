@@ -1,5 +1,6 @@
 package com.discern.api.dto;
 
+import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -18,8 +19,13 @@ import java.util.Date;
 public class UserDTO {
 
     private Long id;
+
+    @NotNull
     private String email;
+
+    @NotNull
     private String username;
+
+    @NotNull
     private String password;
-    private String cpf;
 }

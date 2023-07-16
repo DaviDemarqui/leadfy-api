@@ -30,15 +30,4 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private String cpf;
-
-//    @Column(nullable = false)
-//    private boolean status;
-
-//    @Column(name = "created_at")
-//    private Date createdAt;
-//
-//    @Column(name = "updated_at")
-//    private Date updatedAt;
 }

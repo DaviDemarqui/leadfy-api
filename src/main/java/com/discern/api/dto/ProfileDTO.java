@@ -16,7 +16,6 @@ import lombok.*;
 public class ProfileDTO {
 
     private Long id;
-    private byte[] profilePic;
     private String name;
     private String email;
     private String company_role;

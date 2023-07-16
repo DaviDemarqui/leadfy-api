@@ -24,12 +24,6 @@ public class Company {
     private String name;
 
     @Column
-    private byte[] logo;
-
-    @Column
-    private String email;
-
-    @Column
     private String industry;
 
     @Column
@@ -37,9 +31,6 @@ public class Company {
 
     @Column
     private LocalDateTime createdOn;
-
-    @Column
-    private String cnpj;
 
     @Column
     private String address;

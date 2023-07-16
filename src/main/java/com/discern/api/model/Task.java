@@ -1,6 +1,7 @@
 package com.discern.api.model;
 
 import com.discern.api.enums.Priority;
+import com.discern.api.enums.TaskStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +30,7 @@ public class Task {
     private String details;
 
     @Column
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Priority priority;
 
     @Column
@@ -45,7 +46,8 @@ public class Task {
     private LocalDate createdAt;
 
     @Column
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status;
 
     @Column
     private Long projectId;
