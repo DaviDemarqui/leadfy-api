@@ -45,3 +45,46 @@ CREATE EVENT IF NOT EXISTS `update_task_status`
     END //
 DELIMITER ;
 
+CREATE TABLE IF NOT EXISTS `invited_member` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL,
+    `email` VARCHAR(255) NOT NULL,
+    `phone` VARCHAR(255) NOT NULL,
+    `roles` VARCHAR(255) NOT NULL,
+    `invite_message` TEXT NOT NULL,
+    `activated` TINYINT(1) NOT NULL,
+    `created_on` DATETIME NOT NULL
+);
+
+CREATE EVENT IF NOT EXISTS `delete_inactive_invites`
+ON SCHEDULE EVERY 1 DAY
+STARTS CURRENT_TIMESTAMP
+DO
+BEGIN
+    DELETE FROM `invited_member`
+    WHERE `activated` = 0
+    AND `created_on` < (NOW() - INTERVAL 3 DAY);
+END;
+
+CREATE VIEW project_info AS
+SELECT
+		p.id AS project_id,
+    p.name AS project_name,
+    p.description AS project_description,
+    p.due_date as due_date,
+    COUNT(CASE WHEN t.status = 'COMPLETED' THEN 1 END) AS num_tasks_completed,
+    COUNT(CASE WHEN t.status = 'TO_DO' THEN 1 END) AS num_tasks_todo,
+    DATEDIFF(p.due_date, CURDATE()) AS dias_restantes,
+    COUNT(ta.id) AS num_membros,
+		(COUNT(CASE WHEN t.status = 'COMPLETED' THEN 1 END) / COUNT(t.id)) * 100 AS conclusion_percentage
+
+FROM
+    project p
+    LEFT JOIN task t ON p.id = t.project_id
+    LEFT JOIN team ta ON p.id = ta.project_id
+GROUP BY
+    p.id;
+
+
+
+

@@ -31,8 +31,13 @@ public class ProjectController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<?> getAllProject(@PathVariable Long id) {
+    public ResponseEntity<?> getProjectById(@PathVariable Long id) {
         return ResponseEntity.ok(projectService.findById(id));
+    }
+
+    @GetMapping("info/{id}")
+    public ResponseEntity<?> getProjectInfo(@PathVariable Long id) {
+        return ResponseEntity.ok(projectService.findProjectInfoById(id));
     }
 
     @PostMapping

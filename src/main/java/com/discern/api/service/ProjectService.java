@@ -6,11 +6,13 @@ import com.discern.api.exceptions.ProjectNotFoundException;
 import com.discern.api.model.Project;
 import com.discern.api.model.Team;
 import com.discern.api.repository.ListProjectVORepository;
+import com.discern.api.repository.ProjectInfoVORepository;
 import com.discern.api.repository.ProjectRepository;
 import com.discern.api.repository.TeamRepository;
 import com.discern.api.utils.mapper.MapperUtil;
 import com.discern.api.utils.matcher.TiposExampleMatcher;
 import com.discern.api.view.ListProjectVO;
+import com.discern.api.view.ProjectInfoVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
@@ -29,6 +31,7 @@ public class ProjectService {
     private final MapperUtil mapperUtil;
     private final ProjectRepository projectRepository;
     private final ListProjectVORepository listProjectVORepository;
+    private final ProjectInfoVORepository projectInfoVORepository;
     private final TeamRepository teamRepository;
 
 
@@ -43,6 +46,11 @@ public class ProjectService {
     public ProjectDTO findById(Long id) {
         return mapperUtil.mapTo(projectRepository.findById(id)
                 .orElseThrow(ProjectNotFoundException::new), ProjectDTO.class);
+    }
+
+    public ProjectInfoVO findProjectInfoById(Long id) {
+        return projectInfoVORepository.findById(id)
+                .orElseThrow(ProjectNotFoundException::new);
     }
 
     public ProjectDTO updateProject(ProjectDTO projectDTO, Long id) {

@@ -6,6 +6,7 @@ import com.discern.api.service.TokenVerifyingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,6 +19,7 @@ public class ClientController {
     // TODO - Ajustar company_id para seguir com a validação!
 
     @GetMapping
+    @PreAuthorize("hasAnyRole(T(com.discern.api.enums.Privilegies).ROLE_PROJECT_READ.name())")
     public ResponseEntity<?> getAllClients(ClientDTO clientDTO, Pageable pageable) {
 //        tokenVerifyingService.validateCompanyId(token, clientDTO.getCompanyId());
         return ResponseEntity.ok(clientService.getAllClients(clientDTO, pageable));

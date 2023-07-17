@@ -26,10 +26,6 @@ public class JwtUtil {
         return extractClaim(token, Claims::getSubject);
     }
 
-//    public String extractCompanyId(String token) {
-//        return extractClaim(token, Claims::getSubject);
-//    }
-
     public Integer extractCompanyId(String token) {
         Claims claims = extractAllClaims(token);
         return (Integer) claims.get("companyId");
