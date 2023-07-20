@@ -1,6 +1,8 @@
 package com.discern.api.service;
 
 import com.discern.api.dto.TaskDTO;
+import com.discern.api.dto.TaskStatusDTO;
+import com.discern.api.enums.TaskStatus;
 import com.discern.api.exceptions.TaskNotFoundException;
 import com.discern.api.model.Task;
 import com.discern.api.repository.TaskRepository;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -34,6 +37,14 @@ public class TaskService {
     public TaskDTO findById(Long id) {
         return mapperUtil.mapTo(taskRepository.findById(id)
                 .orElseThrow(TaskNotFoundException::new), TaskDTO.class);
+    }
+
+    public void completeTasks(List<TaskStatusDTO> taskStatusList) {
+        for(TaskStatusDTO taskDTO : taskStatusList) {
+            Task task = taskRepository.findById(taskDTO.getTaskId()).orElseThrow(TaskNotFoundException::new);
+            task.setStatus(TaskStatus.COMPLETED);
+            taskRepository.save(task);
+        }
     }
 
     public TaskDTO saveOrUpdate(TaskDTO taskDTO, Long id) {

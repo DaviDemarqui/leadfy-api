@@ -1,6 +1,7 @@
 package com.discern.api.controller;
 
 import com.discern.api.dto.TaskDTO;
+import com.discern.api.dto.TaskStatusDTO;
 import com.discern.api.service.TaskService;
 import com.discern.api.service.TaskService;
 import com.discern.api.service.TokenVerifyingService;
@@ -8,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author Davi
@@ -31,6 +34,12 @@ public class TaskController {
     @GetMapping("{id}")
     public ResponseEntity<?> getAllTasks(@PathVariable Long id) {
         return ResponseEntity.ok(taskService.findById(id));
+    }
+
+    @PostMapping("status")
+    public ResponseEntity<?> postTask(@RequestBody List<TaskStatusDTO> taskDTO) {
+        taskService.completeTasks(taskDTO);
+        return ResponseEntity.ok("Tasks Completed");
     }
 
     @PostMapping
