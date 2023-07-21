@@ -3,8 +3,6 @@ package com.discern.api.controller;
 import com.discern.api.dto.TaskDTO;
 import com.discern.api.dto.TaskStatusDTO;
 import com.discern.api.service.TaskService;
-import com.discern.api.service.TaskService;
-import com.discern.api.service.TokenVerifyingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +21,6 @@ import java.util.List;
 public class TaskController {
 
     private final TaskService taskService;
-    private final TokenVerifyingService tokenVerifyingService;
 
     @GetMapping
     public ResponseEntity<?> getAllTasks(TaskDTO taskDTO, Pageable pageable) {
@@ -44,7 +41,6 @@ public class TaskController {
 
     @PostMapping
     public ResponseEntity<?> postTask(@RequestBody TaskDTO taskDTO, @RequestHeader("Authorization") String token) {
-        tokenVerifyingService.validateCompanyId(token, taskDTO.getCompanyId());
         return ResponseEntity.ok(taskService.saveOrUpdate(taskDTO, null));
     }
 
