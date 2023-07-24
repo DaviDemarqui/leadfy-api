@@ -1,5 +1,7 @@
 package com.discern.api.security;
 
+import com.discern.api.enums.UserRoles;
+import com.discern.api.model.Role;
 import com.discern.api.model.UserEntity;
 import io.jsonwebtoken.*;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -8,7 +10,10 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Davi
@@ -19,8 +24,26 @@ import java.util.Date;
 public class JwtGenerator {
 
     public String generateToken(Long companyId, String email, Long userId, UserEntity user) {
-        LocalDate expirationDate = LocalDate.now().plusWeeks(SecurityConstants.JWT_EXPIRATION_WEEKS);
-        Date expirationTime = Date.from(expirationDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        // Set the token validity duration (e.g., 1 hour)
+        int validityDurationInHours = 1;
+
+        // Get the current LocalDateTime
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        // Calculate the expiration LocalDateTime by adding validityDurationInHours
+        LocalDateTime expirationDateTime = currentDateTime.plusHours(validityDurationInHours);
+
+        // Convert LocalDateTime to ZonedDateTime
+        ZonedDateTime zonedDateTime = expirationDateTime.atZone(ZoneId.systemDefault());
+
+        // Convert ZonedDateTime to Date
+        Date expirationTime = Date.from(zonedDateTime.toInstant());
+
+        List<String> roles = new ArrayList<>();
+
+        for (Role role : user.getRoles()) {
+            roles.add(role.getName());
+        }
 
         String token = Jwts.builder()
                 .setSubject(email)
@@ -28,7 +51,7 @@ public class JwtGenerator {
                 .setExpiration(expirationTime)
                 .claim("companyId", companyId)
                 .claim("userId", userId)
-                .claim("roles", user.getRoles())
+                .claim("roles", roles)
                 .signWith(SignatureAlgorithm.HS256, SecurityConstants.JWT_SECRET)
                 .compact();
 
