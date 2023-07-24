@@ -7,6 +7,7 @@ import com.discern.api.view.ListProjectVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/projects")
+@PreAuthorize("hasRole('ROLE_PROJECT')")
 public class ProjectController {
 
     private final ProjectService projectService;
