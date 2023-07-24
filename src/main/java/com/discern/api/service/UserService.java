@@ -5,6 +5,7 @@ import com.discern.api.dto.ProfileDTO;
 import com.discern.api.model.Company;
 import com.discern.api.model.UserEntity;
 import com.discern.api.repository.CompanyRepository;
+import com.discern.api.repository.RoleRepository;
 import com.discern.api.repository.UserRepository;
 import com.discern.api.model.Profile;
 import com.discern.api.repository.ProfileRepository;
@@ -22,6 +23,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
     private final CompanyRepository companyRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final MapperUtil mapperUtil;
 
@@ -29,6 +31,7 @@ public class UserService {
 
         UserEntity user = mapperUtil.mapTo(ownerRegistrationDTO.getUserDTO(), UserEntity.class);
         user.setPassword(passwordEncoder.encode(ownerRegistrationDTO.getUserDTO().getPassword()));
+        user.setRoles(roleRepository.findAll());
         userRepository.save(user); // Save the user
 
         Company company = mapperUtil.mapTo(ownerRegistrationDTO.getCompanyDTO(), Company.class);
