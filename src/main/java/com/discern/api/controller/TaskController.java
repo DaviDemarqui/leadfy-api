@@ -3,11 +3,10 @@ package com.discern.api.controller;
 import com.discern.api.dto.TaskDTO;
 import com.discern.api.dto.TaskStatusDTO;
 import com.discern.api.service.TaskService;
-import com.discern.api.service.TaskService;
-import com.discern.api.service.TokenVerifyingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,10 +19,10 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/tasks")
+@PreAuthorize("hasRole('ROLE_TASK')")
 public class TaskController {
 
     private final TaskService taskService;
-    private final TokenVerifyingService tokenVerifyingService;
 
     @GetMapping
     public ResponseEntity<?> getAllTasks(TaskDTO taskDTO, Pageable pageable) {
@@ -44,7 +43,6 @@ public class TaskController {
 
     @PostMapping
     public ResponseEntity<?> postTask(@RequestBody TaskDTO taskDTO, @RequestHeader("Authorization") String token) {
-        tokenVerifyingService.validateCompanyId(token, taskDTO.getCompanyId());
         return ResponseEntity.ok(taskService.saveOrUpdate(taskDTO, null));
     }
 

@@ -2,13 +2,12 @@ package com.discern.api.controller;
 
 import com.discern.api.dto.ProjectCreationDTO;
 import com.discern.api.dto.ProjectDTO;
-import com.discern.api.service.ClientService;
 import com.discern.api.service.ProjectService;
-import com.discern.api.service.TokenVerifyingService;
 import com.discern.api.view.ListProjectVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -19,10 +18,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/projects")
+@PreAuthorize("hasRole('ROLE_PROJECT')")
 public class ProjectController {
 
     private final ProjectService projectService;
-    private final TokenVerifyingService tokenVerifyingService;
 
     @GetMapping
     public ResponseEntity<?> getAllProject(ListProjectVO projectVO, Pageable pageable) {
@@ -42,7 +41,6 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity<?> postClient(@RequestBody ProjectCreationDTO projectCreationDTO, @RequestHeader("Authorization") String token) {
-        tokenVerifyingService.validateCompanyId(token, projectCreationDTO.getCompanyId());
         return ResponseEntity.ok(projectService.createProject(projectCreationDTO));
     }
 

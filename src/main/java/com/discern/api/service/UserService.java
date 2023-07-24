@@ -3,7 +3,7 @@ package com.discern.api.service;
 import com.discern.api.dto.OwnerRegistrationDTO;
 import com.discern.api.dto.ProfileDTO;
 import com.discern.api.model.Company;
-import com.discern.api.model.User;
+import com.discern.api.model.UserEntity;
 import com.discern.api.repository.CompanyRepository;
 import com.discern.api.repository.UserRepository;
 import com.discern.api.model.Profile;
@@ -27,7 +27,7 @@ public class UserService {
 
     public ProfileDTO registration(OwnerRegistrationDTO ownerRegistrationDTO) {
 
-        User user = mapperUtil.mapTo(ownerRegistrationDTO.getUserDTO(), User.class);
+        UserEntity user = mapperUtil.mapTo(ownerRegistrationDTO.getUserDTO(), UserEntity.class);
         user.setPassword(passwordEncoder.encode(ownerRegistrationDTO.getUserDTO().getPassword()));
         userRepository.save(user); // Save the user
 

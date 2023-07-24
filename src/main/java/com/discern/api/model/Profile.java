@@ -1,6 +1,5 @@
 package com.discern.api.model;
 
-import com.discern.api.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,7 +35,7 @@ public class Profile {
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private UserEntity user;
 
     @Column
     private Long companyId;
