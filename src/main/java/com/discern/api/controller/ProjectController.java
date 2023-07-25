@@ -18,38 +18,43 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/projects")
-@PreAuthorize("hasRole('ROLE_PROJECT')")
 public class ProjectController {
 
     private final ProjectService projectService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_PROJECT_READ')")
     public ResponseEntity<?> getAllProject(ListProjectVO projectVO, Pageable pageable) {
 //        tokenVerifyingService.validateCompanyId(token, projectDTO.getCompanyId());
         return ResponseEntity.ok(projectService.getAllProjects(projectVO, pageable));
     }
 
     @GetMapping("{id}")
+    @PreAuthorize("hasRole('ROLE_PROJECT_READ')")
     public ResponseEntity<?> getProjectById(@PathVariable Long id) {
         return ResponseEntity.ok(projectService.findById(id));
     }
 
     @GetMapping("info/{id}")
+    @PreAuthorize("hasRole('ROLE_PROJECT_READ')")
     public ResponseEntity<?> getProjectInfo(@PathVariable Long id) {
         return ResponseEntity.ok(projectService.findProjectInfoById(id));
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_PROJECT_CREATE')")
     public ResponseEntity<?> postClient(@RequestBody ProjectCreationDTO projectCreationDTO, @RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(projectService.createProject(projectCreationDTO));
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("hasRole('ROLE_PROJECT_UPDATE')")
     public ResponseEntity<?> putClient(@PathVariable Long id, @RequestBody ProjectDTO projectDTO) {
         return ResponseEntity.ok(projectService.updateProject(projectDTO, id));
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ROLE_PROJECT_DELETE')")
     public ResponseEntity<?> deleteClient(@PathVariable Long id) {
         projectService.deleteProject(id);
         return ResponseEntity.noContent().build();

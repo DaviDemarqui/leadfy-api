@@ -19,39 +19,44 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/tasks")
-@PreAuthorize("hasRole('ROLE_TASK')")
 public class TaskController {
 
     private final TaskService taskService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_TASK_READ')")
     public ResponseEntity<?> getAllTasks(TaskDTO taskDTO, Pageable pageable) {
 //        tokenVerifyingService.validateCompanyId(token, taskDTO.getCompanyId());
         return ResponseEntity.ok(taskService.getAllTasks(taskDTO, pageable));
     }
 
     @GetMapping("{id}")
+    @PreAuthorize("hasRole('ROLE_TASK_READ')")
     public ResponseEntity<?> getAllTasks(@PathVariable Long id) {
         return ResponseEntity.ok(taskService.findById(id));
     }
 
     @PostMapping("status")
+    @PreAuthorize("hasRole('ROLE_TASK_UPDATE')")
     public ResponseEntity<?> postTask(@RequestBody List<TaskStatusDTO> taskDTO) {
         taskService.completeTasks(taskDTO);
         return ResponseEntity.ok("Tasks Completed");
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_TASK_CREATE')")
     public ResponseEntity<?> postTask(@RequestBody TaskDTO taskDTO, @RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(taskService.saveOrUpdate(taskDTO, null));
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("hasRole('ROLE_TASK_UPDATE')")
     public ResponseEntity<?> putTask(@PathVariable Long id, @RequestBody TaskDTO taskDTO) {
         return ResponseEntity.ok(taskService.saveOrUpdate(taskDTO, id));
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ROLE_TASK_DELETE')")
     public ResponseEntity<?> deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);
         return ResponseEntity.noContent().build();

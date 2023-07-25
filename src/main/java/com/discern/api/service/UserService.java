@@ -31,7 +31,7 @@ public class UserService {
 
         UserEntity user = mapperUtil.mapTo(ownerRegistrationDTO.getUserDTO(), UserEntity.class);
         user.setPassword(passwordEncoder.encode(ownerRegistrationDTO.getUserDTO().getPassword()));
-        user.setRoles(roleRepository.findAll());
+        user.setRoles(roleRepository.findAllByType("user"));
         userRepository.save(user); // Save the user
 
         Company company = mapperUtil.mapTo(ownerRegistrationDTO.getCompanyDTO(), Company.class);

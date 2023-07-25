@@ -16,33 +16,37 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/notes")
-@PreAuthorize("hasRole('ROLE_NOTE')")
 public class NoteController {
 
     private final NoteService noteService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_NOTE_READ')")
     public ResponseEntity<?> getAllNotes(NoteDTO noteDTO, Pageable pageable) {
 //        tokenVerifyingService.validateCompanyId(token, noteDTO.getCompanyId());
         return ResponseEntity.ok(noteService.getAllNotes(noteDTO, pageable));
     }
 
     @GetMapping("{id}")
+    @PreAuthorize("hasRole('ROLE_NOTE_READ')")
     public ResponseEntity<?> getAllNotes(@PathVariable Long id) {
         return ResponseEntity.ok(noteService.findById(id));
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_NOTE_CREATE')")
     public ResponseEntity<?> postNote(@RequestBody NoteDTO noteDTO, @RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(noteService.saveOrUpdate(noteDTO, null));
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("hasRole('ROLE_NOTE_UPDATE')")
     public ResponseEntity<?> putNote(@PathVariable Long id, @RequestBody NoteDTO noteDTO) {
         return ResponseEntity.ok(noteService.saveOrUpdate(noteDTO, id));
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ROLE_NOTE_DELETE')")
     public ResponseEntity<?> deleteNote(@PathVariable Long id) {
         noteService.deleteNote(id);
         return ResponseEntity.noContent().build();

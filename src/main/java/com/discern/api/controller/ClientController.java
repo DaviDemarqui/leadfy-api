@@ -11,33 +11,37 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/clients")
-@PreAuthorize("hasRole('ROLE_CLIENT')")
 public class ClientController {
 
     private final ClientService clientService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_CLIENT_READ')")
     public ResponseEntity<?> getAllClients(ClientDTO clientDTO, Pageable pageable) {
 //        tokenVerifyingService.validateCompanyId(token, clientDTO.getCompanyId());
         return ResponseEntity.ok(clientService.getAllClients(clientDTO, pageable));
     }
 
     @GetMapping("{id}")
+    @PreAuthorize("hasRole('ROLE_CLIENT_READ')")
     public ResponseEntity<?> getAllClients(@PathVariable Long id) {
         return ResponseEntity.ok(clientService.findById(id));
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_CLIENT_CREATE')")
     public ResponseEntity<?> postClient(@RequestBody ClientDTO clientDTO, @RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(clientService.saveOrUpdate(clientDTO, null));
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("hasRole('ROLE_CLIENT_UPDATE')")
     public ResponseEntity<?> putClient(@PathVariable Long id, @RequestBody ClientDTO clientDTO) {
         return ResponseEntity.ok(clientService.saveOrUpdate(clientDTO, id));
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ROLE_CLIENT_DELETE')")
     public ResponseEntity<?> deleteClient(@PathVariable Long id) {
         clientService.deleteClient(id);
         return ResponseEntity.noContent().build();

@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/team-members")
-@PreAuthorize("hasRole('ROLE_TEAM_MEMBER')")
 public class TeamMemberController {
 
     private final TeamMemberService teamMemberService;
 
     @GetMapping
-    public ResponseEntity<?> getAllNotes(TeamMemberDTO teamDTO, Pageable pageable) {
+    @PreAuthorize("hasRole('ROLE_TEAM_MEMBER_READ')")
+    public ResponseEntity<?> getAllTeamMembers(TeamMemberDTO teamDTO, Pageable pageable) {
 //        tokenVerifyingService.validateCompanyId(token, teamDTO.getCompanyId());
         return ResponseEntity.ok(teamMemberService.getAllTeamMembers(teamDTO, pageable));
     }
