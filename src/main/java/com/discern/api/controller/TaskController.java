@@ -25,9 +25,8 @@ public class TaskController {
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_TASK_READ')")
-    public ResponseEntity<?> getAllTasks(TaskDTO taskDTO, Pageable pageable) {
-//        tokenVerifyingService.validateCompanyId(token, taskDTO.getCompanyId());
-        return ResponseEntity.ok(taskService.getAllTasks(taskDTO, pageable));
+    public ResponseEntity<?> getAllTasks(Pageable pageable) {
+        return ResponseEntity.ok(taskService.getAllTasks(pageable));
     }
 
     @GetMapping("{id}")
@@ -45,7 +44,7 @@ public class TaskController {
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_TASK_CREATE')")
-    public ResponseEntity<?> postTask(@RequestBody TaskDTO taskDTO, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> postTask(@RequestBody TaskDTO taskDTO) {
         return ResponseEntity.ok(taskService.saveOrUpdate(taskDTO, null));
     }
 

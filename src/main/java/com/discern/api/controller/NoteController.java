@@ -22,9 +22,8 @@ public class NoteController {
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_NOTE_READ')")
-    public ResponseEntity<?> getAllNotes(NoteDTO noteDTO, Pageable pageable) {
-//        tokenVerifyingService.validateCompanyId(token, noteDTO.getCompanyId());
-        return ResponseEntity.ok(noteService.getAllNotes(noteDTO, pageable));
+    public ResponseEntity<?> getAllNotes(Pageable pageable) {
+        return ResponseEntity.ok(noteService.getAllNotes(pageable));
     }
 
     @GetMapping("{id}")
@@ -35,7 +34,7 @@ public class NoteController {
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_NOTE_CREATE')")
-    public ResponseEntity<?> postNote(@RequestBody NoteDTO noteDTO, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> postNote(@RequestBody NoteDTO noteDTO) {
         return ResponseEntity.ok(noteService.saveOrUpdate(noteDTO, null));
     }
 

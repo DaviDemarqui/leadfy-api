@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -20,8 +21,7 @@ public class TeamMemberController {
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_TEAM_MEMBER_READ')")
-    public ResponseEntity<?> getAllTeamMembers(TeamMemberDTO teamDTO, Pageable pageable) {
-//        tokenVerifyingService.validateCompanyId(token, teamDTO.getCompanyId());
-        return ResponseEntity.ok(teamMemberService.getAllTeamMembers(teamDTO, pageable));
+    public ResponseEntity<?> getAllTeamMembers(@RequestParam Long projectId, Pageable pageable) {
+        return ResponseEntity.ok(teamMemberService.getAllTeamMembers(projectId ,pageable));
     }
 }

@@ -6,6 +6,8 @@ import com.discern.api.enums.TaskStatus;
 import com.discern.api.exceptions.TaskNotFoundException;
 import com.discern.api.model.Task;
 import com.discern.api.repository.TaskRepository;
+import com.discern.api.security.JwtAuthenticationFilter;
+import com.discern.api.utils.CompanyValidator;
 import com.discern.api.utils.mapper.MapperUtil;
 import com.discern.api.utils.matcher.TiposExampleMatcher;
 import lombok.RequiredArgsConstructor;
@@ -26,28 +28,27 @@ public class TaskService {
     private final MapperUtil mapperUtil;
     private final TaskRepository taskRepository;
 
-    public Page<TaskDTO> getAllTasks(TaskDTO taskDTO, Pageable pageable) {
-        var example = Example.of(mapperUtil.mapTo(taskDTO, Task.class),
-                TiposExampleMatcher.exampleMatcherMatchingAny());
-
-        return taskRepository.findAll(example, pageable)
+    public Page<TaskDTO> getAllTasks(Pageable pageable) {
+        return taskRepository.findAllByCompanyId(JwtAuthenticationFilter.getCurrentCompanyId(), pageable)
                 .map(Task -> mapperUtil.mapTo(Task, TaskDTO.class));
     }
 
     public TaskDTO findById(Long id) {
-        return mapperUtil.mapTo(taskRepository.findById(id)
+        return mapperUtil.mapTo(taskRepository.findByIdAndCompanyId(id, JwtAuthenticationFilter.getCurrentCompanyId())
                 .orElseThrow(TaskNotFoundException::new), TaskDTO.class);
     }
 
     public void completeTasks(List<TaskStatusDTO> taskStatusList) {
         for(TaskStatusDTO taskDTO : taskStatusList) {
-            Task task = taskRepository.findById(taskDTO.getTaskId()).orElseThrow(TaskNotFoundException::new);
+            Task task = taskRepository.findByIdAndCompanyId(taskDTO.getTaskId(), JwtAuthenticationFilter.getCurrentCompanyId()).orElseThrow(TaskNotFoundException::new);
             task.setStatus(TaskStatus.COMPLETED);
             taskRepository.save(task);
         }
     }
 
     public TaskDTO saveOrUpdate(TaskDTO taskDTO, Long id) {
+
+        CompanyValidator.validateProject(taskDTO.getProjectId(), taskDTO.getCompanyId());
         Task taskSave;
 
         if(id != null) {
@@ -62,6 +63,6 @@ public class TaskService {
     }
 
     public void deleteTask(Long id) {
-        taskRepository.deleteById(id);
+        taskRepository.deleteByIdAndCompanyId(id, JwtAuthenticationFilter.getCurrentCompanyId());
     }
 }

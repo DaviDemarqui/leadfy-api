@@ -5,6 +5,8 @@ import com.discern.api.model.Client;
 import com.discern.api.model.Project;
 import com.discern.api.repository.ClientRepository;
 import com.discern.api.repository.ProjectRepository;
+import com.discern.api.security.JwtAuthenticationFilter;
+import com.discern.api.utils.CompanyValidator;
 import com.discern.api.utils.mapper.MapperUtil;
 import com.discern.api.utils.matcher.TiposExampleMatcher;
 import lombok.RequiredArgsConstructor;
@@ -27,23 +29,25 @@ public class ClientService {
     private final ClientRepository clientRepository;
     private final ProjectRepository projectRepository;
 
-    public Page<ClientDTO> getAllClients(Long companyId, Pageable pageable) {
+    public Page<ClientDTO> getAllClients(Pageable pageable) {
 
-        return clientRepository.findAllByCompanyId(companyId, pageable)
+        return clientRepository.findAllByCompanyId(JwtAuthenticationFilter.getCurrentCompanyId(), pageable)
                 .map(Client -> mapperUtil.mapTo(Client, ClientDTO.class));
     }
 
     public ClientDTO findById(Long id) {
-        return mapperUtil.mapTo(clientRepository.findById(id)
+        return mapperUtil.mapTo(clientRepository.findByIdAndCompanyId(id, JwtAuthenticationFilter.getCurrentCompanyId())
                 .orElseThrow(ClientNotFoundException::new), ClientDTO.class);
     }
 
     public ClientDTO saveOrUpdate(ClientDTO clientDTO, Long id) {
-        Client clientSave = new Client();
+
+        CompanyValidator.validateId(clientDTO.getCompanyId());
+        Client clientSave;
 
         if(id != null) {
             if(clientDTO.getProjectId().equals(null)) {
-                throw new RuntimeException("ERROR: No projectId provided");
+                throw new RuntimeException("NULL Error - No project id provided!");
             }
             clientSave = clientRepository.findById(id).orElseThrow(ClientNotFoundException::new);
             Client pDTO = mapperUtil.mapTo(clientDTO, Client.class);
@@ -66,6 +70,8 @@ public class ClientService {
     }
 
     public void deleteClient(Long id) {
-        clientRepository.deleteById(id);
+        Client client = clientRepository.findByIdAndCompanyId(id, JwtAuthenticationFilter.getCurrentCompanyId())
+                .orElseThrow(ClientNotFoundException::new);
+        clientRepository.deleteById(client.getId());
     }
 }

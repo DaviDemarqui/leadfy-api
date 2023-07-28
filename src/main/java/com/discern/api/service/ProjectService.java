@@ -37,19 +37,19 @@ public class ProjectService {
     private final TeamRepository teamRepository;
 
 
-    public Page<ListProjectVO> getAllProjects(Pageable pageable) {
+public Page<ListProjectVO> getAllProjects(Pageable pageable) {
 
         return listProjectVORepository.findAllByCompanyId(JwtAuthenticationFilter.getCurrentCompanyId(), pageable)
                 .map(ProjectVO -> mapperUtil.mapTo(ProjectVO, ListProjectVO.class));
     }
 
     public ProjectDTO findById(Long id) {
-        return mapperUtil.mapTo(projectRepository.findById(id)
+        return mapperUtil.mapTo(projectRepository.findByIdAndCompanyId(id, JwtAuthenticationFilter.getCurrentCompanyId())
                 .orElseThrow(ProjectNotFoundException::new), ProjectDTO.class);
     }
 
     public ProjectInfoVO findProjectInfoById(Long id) {
-        return projectInfoVORepository.findById(id)
+        return projectInfoVORepository.findByIdAndCompanyId(id, JwtAuthenticationFilter.getCurrentCompanyId())
                 .orElseThrow(ProjectNotFoundException::new);
     }
 
@@ -63,7 +63,9 @@ public class ProjectService {
     }
 
     public void deleteProject(Long id) {
-        projectRepository.deleteById(id);
+        Project project = projectRepository.findByIdAndCompanyId(id, JwtAuthenticationFilter.getCurrentCompanyId())
+                        .orElseThrow(ProjectNotFoundException::new);
+        projectRepository.deleteById(project.getId());
     }
 
     public ProjectDTO createProject(ProjectCreationDTO projectCreationDTO) {

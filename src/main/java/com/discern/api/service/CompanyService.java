@@ -23,7 +23,7 @@ public class CompanyService {
     private final MapperUtil mapperUtil;
     private final CompanyRepository companyRepository;
 
-    public Page<CompanyDTO> getAllCompanys(CompanyDTO companyDTO, Pageable pageable) {
+    public Page<CompanyDTO> getAllCompanies(CompanyDTO companyDTO, Pageable pageable) {
         var example = Example.of(mapperUtil.mapTo(companyDTO, Company.class),
                 TiposExampleMatcher.exampleMatcherMatchingAny());
 

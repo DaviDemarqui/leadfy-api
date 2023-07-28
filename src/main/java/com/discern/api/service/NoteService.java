@@ -5,6 +5,8 @@ import com.discern.api.exceptions.NoteNotFoundException;
 import com.discern.api.model.Note;
 import com.discern.api.repository.NoteRepository;
 import com.discern.api.repository.NoteRepository;
+import com.discern.api.security.JwtAuthenticationFilter;
+import com.discern.api.utils.CompanyValidator;
 import com.discern.api.utils.mapper.MapperUtil;
 import com.discern.api.utils.matcher.TiposExampleMatcher;
 import lombok.RequiredArgsConstructor;
@@ -24,20 +26,19 @@ public class NoteService {
     private final MapperUtil mapperUtil;
     private final NoteRepository noteRepository;
 
-    public Page<NoteDTO> getAllNotes(NoteDTO noteDTO, Pageable pageable) {
-        var example = Example.of(mapperUtil.mapTo(noteDTO, Note.class),
-                TiposExampleMatcher.exampleMatcherMatchingAny());
-
-        return noteRepository.findAll(example, pageable)
+    public Page<NoteDTO> getAllNotes(Pageable pageable) {
+        return noteRepository.findAllByCompanyId(JwtAuthenticationFilter.getCurrentCompanyId(), pageable)
                 .map(Note -> mapperUtil.mapTo(Note, NoteDTO.class));
     }
 
     public NoteDTO findById(Long id) {
-        return mapperUtil.mapTo(noteRepository.findById(id)
+        return mapperUtil.mapTo(noteRepository.findByIdAndCompanyId(id, JwtAuthenticationFilter.getCurrentCompanyId())
                 .orElseThrow(NoteNotFoundException::new), NoteDTO.class);
     }
 
     public NoteDTO saveOrUpdate(NoteDTO noteDTO, Long id) {
+
+        CompanyValidator.validateProject(noteDTO.getProjectId(), noteDTO.getCompanyId());
         Note noteSave;
 
         if(id != null) {
@@ -52,6 +53,6 @@ public class NoteService {
     }
 
     public void deleteNote(Long id) {
-        noteRepository.deleteById(id);
+        noteRepository.deleteByIdAndCompanyId(id, JwtAuthenticationFilter.getCurrentCompanyId());
     }
 }
