@@ -17,7 +17,6 @@ import com.discern.api.exceptions.ClientNotFoundException;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Service
 @Transactional
@@ -28,11 +27,9 @@ public class ClientService {
     private final ClientRepository clientRepository;
     private final ProjectRepository projectRepository;
 
-    public Page<ClientDTO> getAllClients(ClientDTO clientDTO, Pageable pageable) {
-        var example = Example.of(mapperUtil.mapTo(clientDTO, Client.class),
-                TiposExampleMatcher.exampleMatcherMatchingAny());
+    public Page<ClientDTO> getAllClients(Long companyId, Pageable pageable) {
 
-        return clientRepository.findAll(example, pageable)
+        return clientRepository.findAllByCompanyId(companyId, pageable)
                 .map(Client -> mapperUtil.mapTo(Client, ClientDTO.class));
     }
 

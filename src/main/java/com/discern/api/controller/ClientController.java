@@ -1,6 +1,7 @@
 package com.discern.api.controller;
 
 import com.discern.api.dto.ClientDTO;
+import com.discern.api.security.JwtGenerator;
 import com.discern.api.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -14,12 +15,13 @@ import org.springframework.web.bind.annotation.*;
 public class ClientController {
 
     private final ClientService clientService;
+    private final JwtGenerator jwtGenerator;
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_CLIENT_READ')")
-    public ResponseEntity<?> getAllClients(ClientDTO clientDTO, Pageable pageable) {
-//        tokenVerifyingService.validateCompanyId(token, clientDTO.getCompanyId());
-        return ResponseEntity.ok(clientService.getAllClients(clientDTO, pageable));
+    public ResponseEntity<?> getAllClients(Pageable pageable, @RequestHeader("Authorization") String token) {
+        Long companyId = jwtGenerator.getCompanyIdFromToken(token.substring(5));
+        return ResponseEntity.ok(clientService.getAllClients(companyId, pageable));
     }
 
     @GetMapping("{id}")

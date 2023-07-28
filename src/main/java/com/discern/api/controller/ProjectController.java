@@ -2,13 +2,18 @@ package com.discern.api.controller;
 
 import com.discern.api.dto.ProjectCreationDTO;
 import com.discern.api.dto.ProjectDTO;
+import com.discern.api.security.JwtAuthenticationFilter;
+import com.discern.api.security.JwtGenerator;
 import com.discern.api.service.ProjectService;
 import com.discern.api.view.ListProjectVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 /**
  * @author Davi
@@ -21,17 +26,17 @@ import org.springframework.web.bind.annotation.*;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final JwtGenerator jwtGenerator;
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_PROJECT_READ')")
-    public ResponseEntity<?> getAllProject(ListProjectVO projectVO, Pageable pageable) {
-//        tokenVerifyingService.validateCompanyId(token, projectDTO.getCompanyId());
-        return ResponseEntity.ok(projectService.getAllProjects(projectVO, pageable));
+    public ResponseEntity<?> getAllProject(Pageable pageable, @RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok(projectService.getAllProjects(pageable));
     }
 
     @GetMapping("{id}")
     @PreAuthorize("hasRole('ROLE_PROJECT_READ')")
-    public ResponseEntity<?> getProjectById(@PathVariable Long id) {
+    public ResponseEntity<?> getProjectById(@PathVariable Long id, @RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(projectService.findById(id));
     }
 
@@ -49,13 +54,13 @@ public class ProjectController {
 
     @PutMapping("{id}")
     @PreAuthorize("hasRole('ROLE_PROJECT_UPDATE')")
-    public ResponseEntity<?> putClient(@PathVariable Long id, @RequestBody ProjectDTO projectDTO) {
+    public ResponseEntity<?> putClient(@PathVariable Long id, @RequestBody ProjectDTO projectDTO, @RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(projectService.updateProject(projectDTO, id));
     }
 
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('ROLE_PROJECT_DELETE')")
-    public ResponseEntity<?> deleteClient(@PathVariable Long id) {
+    public ResponseEntity<?> deleteClient(@PathVariable Long id, @RequestHeader("Authorization") String token) {
         projectService.deleteProject(id);
         return ResponseEntity.noContent().build();
     }

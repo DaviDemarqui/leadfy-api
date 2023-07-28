@@ -4,7 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.Immutable;
+import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -23,6 +26,8 @@ import java.math.BigDecimal;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@FilterDef(name = "company", parameters = {@ParamDef(name = "companyIdParam", type = "Long")})
+@Filter(name = "company", condition = "companyId = :companyIdParam")
 public class ListProjectVO {
 
     @Id

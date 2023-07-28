@@ -108,4 +108,8 @@ public class JwtGenerator {
 
         return claims.get("userId", Long.class);
     }
+
+    public Long validateAndReturnCompanyId(String token) {
+            return getCompanyIdFromToken(token.substring(5));
+    }
 }

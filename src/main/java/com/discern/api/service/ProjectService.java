@@ -9,6 +9,8 @@ import com.discern.api.repository.ListProjectVORepository;
 import com.discern.api.repository.ProjectInfoVORepository;
 import com.discern.api.repository.ProjectRepository;
 import com.discern.api.repository.TeamRepository;
+import com.discern.api.security.JwtAuthenticationFilter;
+import com.discern.api.utils.CompanyValidator;
 import com.discern.api.utils.mapper.MapperUtil;
 import com.discern.api.utils.matcher.TiposExampleMatcher;
 import com.discern.api.view.ListProjectVO;
@@ -35,11 +37,9 @@ public class ProjectService {
     private final TeamRepository teamRepository;
 
 
-    public Page<ListProjectVO> getAllProjects(ListProjectVO projectVO, Pageable pageable) {
-        var example = Example.of(mapperUtil.mapTo(projectVO, ListProjectVO.class),
-                TiposExampleMatcher.exampleMatcherMatchingAny());
+    public Page<ListProjectVO> getAllProjects(Pageable pageable) {
 
-        return listProjectVORepository.findAll(example, pageable)
+        return listProjectVORepository.findAllByCompanyId(JwtAuthenticationFilter.getCurrentCompanyId(), pageable)
                 .map(ProjectVO -> mapperUtil.mapTo(ProjectVO, ListProjectVO.class));
     }
 
@@ -55,6 +55,8 @@ public class ProjectService {
 
     public ProjectDTO updateProject(ProjectDTO projectDTO, Long id) {
 
+        CompanyValidator.validateId(projectDTO.getCompanyId());
+
         Project pDTO = mapperUtil.mapTo(projectDTO, Project.class);
         BeanUtils.copyProperties(pDTO, projectRepository.findById(id).orElseThrow(ProjectNotFoundException::new), "id");
         return mapperUtil.mapTo(projectRepository.save(mapperUtil.mapTo(pDTO, Project.class)), ProjectDTO.class);
@@ -66,6 +68,8 @@ public class ProjectService {
 
     public ProjectDTO createProject(ProjectCreationDTO projectCreationDTO) {
 
+        CompanyValidator.validateId(projectCreationDTO.getCompanyId());
+
         Project project = new Project();
 
         project.setCompanyId(projectCreationDTO.getCompanyId());
@@ -75,7 +79,6 @@ public class ProjectService {
         project.setDescription(projectCreationDTO.getBrief());
         project.setStatus(projectCreationDTO.getStatus());
         project.setCreatedOn(LocalDate.now());
-        projectRepository.save(project);
 
         Team team = new Team();
 

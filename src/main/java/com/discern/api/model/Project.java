@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -15,6 +18,8 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@FilterDef(name = "company", parameters = {@ParamDef(name = "companyId", type = "long")})
+@Filter(name = "company", condition = "company_id = :companyId")
 public class Project {
 
     @Id
@@ -39,6 +44,6 @@ public class Project {
     @Column
     private Boolean status;
 
-    @Column
+    @Column(name = "company_id")
     private Long companyId;
 }
