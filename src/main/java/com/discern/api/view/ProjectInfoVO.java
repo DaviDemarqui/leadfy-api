@@ -30,4 +30,5 @@ public class ProjectInfoVO {
     private Integer diasRestantes;
     private Integer numMembros;
     private Integer conclusionPercentage;
+    private Long companyId;
 }

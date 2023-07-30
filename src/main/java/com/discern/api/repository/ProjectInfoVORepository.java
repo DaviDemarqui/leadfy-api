@@ -9,6 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface ProjectInfoVORepository extends JpaRepository<ProjectInfoVO, Long> {
-    Optional<ProjectInfoVO> findByIdAndCompanyId(Long id, Long companyId);
+    Optional<ProjectInfoVO> findByProjectIdAndCompanyId(Long id, Long companyId);
 
 }

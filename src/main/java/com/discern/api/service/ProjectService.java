@@ -48,8 +48,9 @@ public Page<ListProjectVO> getAllProjects(Pageable pageable) {
                 .orElseThrow(ProjectNotFoundException::new), ProjectDTO.class);
     }
 
-    public ProjectInfoVO findProjectInfoById(Long id) {
-        return projectInfoVORepository.findByIdAndCompanyId(id, JwtAuthenticationFilter.getCurrentCompanyId())
+    public ProjectInfoVO findProjectInfoById(Long id, String token) {
+
+        return projectInfoVORepository.findByProjectIdAndCompanyId(id, JwtAuthenticationFilter.getCurrentCompanyId())
                 .orElseThrow(ProjectNotFoundException::new);
     }
 

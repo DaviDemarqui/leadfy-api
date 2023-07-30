@@ -4,6 +4,7 @@ import com.discern.api.exceptions.ProjectNotFoundException;
 import com.discern.api.model.Project;
 import com.discern.api.repository.ProjectRepository;
 import com.discern.api.security.JwtAuthenticationFilter;
+import com.discern.api.security.JwtGenerator;
 
 import java.util.Objects;
 
@@ -16,6 +17,7 @@ public class CompanyValidator {
 
 
     private static ProjectRepository projectRepository;
+    private static JwtGenerator jwtGenerator;
 
     /**
      * REMEMBER!
@@ -33,6 +35,13 @@ public class CompanyValidator {
                 .orElseThrow(ProjectNotFoundException::new);
         if(!Objects.equals(project.getCompanyId(), JwtAuthenticationFilter.getCurrentCompanyId())) {
             throw new SecurityException("The project does not belong to that company");
+        }
+    }
+
+    // Deve ser usado quando entidate não tiver o companyId;
+    public static void validateCompanyToken(String token) {
+        if(!Objects.equals(jwtGenerator.getCompanyIdFromToken(token), JwtAuthenticationFilter.getCurrentCompanyId())) {
+            throw new SecurityException("");
         }
     }
 }

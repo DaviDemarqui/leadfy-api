@@ -35,8 +35,8 @@ public class ProjectController {
 
     @GetMapping("info/{id}")
     @PreAuthorize("hasRole('ROLE_PROJECT_READ')")
-    public ResponseEntity<?> getProjectInfo(@PathVariable Long id) {
-        return ResponseEntity.ok(projectService.findProjectInfoById(id));
+    public ResponseEntity<?> getProjectInfo(@PathVariable Long id, @RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok(projectService.findProjectInfoById(id, token));
     }
 
     @PostMapping

@@ -72,6 +72,7 @@ SELECT
     p.name AS project_name,
     p.description AS project_description,
     p.due_date as due_date,
+    p.company_id as company_id,
     COUNT(CASE WHEN t.status = 'COMPLETED' THEN 1 END) AS num_tasks_completed,
     COUNT(CASE WHEN t.status = 'TO_DO' THEN 1 END) AS num_tasks_todo,
     DATEDIFF(p.due_date, CURDATE()) AS dias_restantes,
