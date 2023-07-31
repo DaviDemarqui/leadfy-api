@@ -16,13 +16,17 @@ import javax.persistence.*;
 public class TeamMember {
 
     @Id
-    @Column
+    @Column(name = "profile_id")
     private Long profileId;
 
-    @Column
+    @Column(name = "team_id")
     private Long teamId;
 
     @OneToOne
-    @JoinColumn(name = "profileId", referencedColumnName = "id")
+    @JoinColumn(name = "team_id", insertable = false, updatable = false, referencedColumnName = "id")
+    private Team team;
+
+    @OneToOne
+    @JoinColumn(name = "profile_id", insertable = false, updatable = false, referencedColumnName = "id")
     private Profile profile;
 }
