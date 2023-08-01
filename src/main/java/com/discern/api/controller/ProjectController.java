@@ -41,8 +41,8 @@ public class ProjectController {
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_PROJECT_CREATE')")
-    public ResponseEntity<?> postClient(@RequestBody ProjectCreationDTO projectCreationDTO) {
-        return ResponseEntity.ok(projectService.createProject(projectCreationDTO));
+    public ResponseEntity<?> postClient(@RequestBody ProjectDTO projectDTO, @RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok(projectService.createProject(projectDTO, token));
     }
 
     @PutMapping("{id}")

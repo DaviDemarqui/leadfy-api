@@ -5,11 +5,10 @@ import com.discern.api.dto.ProjectDTO;
 import com.discern.api.exceptions.ProjectNotFoundException;
 import com.discern.api.model.Project;
 import com.discern.api.model.Team;
-import com.discern.api.repository.ListProjectVORepository;
-import com.discern.api.repository.ProjectInfoVORepository;
-import com.discern.api.repository.ProjectRepository;
-import com.discern.api.repository.TeamRepository;
+import com.discern.api.model.TeamMember;
+import com.discern.api.repository.*;
 import com.discern.api.security.JwtAuthenticationFilter;
+import com.discern.api.security.JwtGenerator;
 import com.discern.api.utils.CompanyValidator;
 import com.discern.api.utils.mapper.MapperUtil;
 import com.discern.api.utils.matcher.TiposExampleMatcher;
@@ -31,10 +30,12 @@ import java.time.LocalDate;
 public class ProjectService {
 
     private final MapperUtil mapperUtil;
+    private final JwtGenerator jwtGenerator;
     private final ProjectRepository projectRepository;
     private final ListProjectVORepository listProjectVORepository;
     private final ProjectInfoVORepository projectInfoVORepository;
     private final TeamRepository teamRepository;
+    private final TeamMemberRepository teamMemberRepository;
 
 
 public Page<ListProjectVO> getAllProjects(Pageable pageable) {
@@ -69,28 +70,20 @@ public Page<ListProjectVO> getAllProjects(Pageable pageable) {
         projectRepository.deleteById(project.getId());
     }
 
-    public ProjectDTO createProject(ProjectCreationDTO projectCreationDTO) {
+    public ProjectDTO createProject(ProjectDTO projectDTO, String token) {
 
-        CompanyValidator.validateId(projectCreationDTO.getCompanyId());
+        CompanyValidator.validateId(projectDTO.getCompanyId());
 
-        Project project = new Project();
+        Project saveProject = mapperUtil.mapTo(projectDTO, Project.class);
+        projectRepository.save(saveProject);
 
-        project.setCompanyId(projectCreationDTO.getCompanyId());
-        project.setName(projectCreationDTO.getName());
-        project.setOngoing(projectCreationDTO.getOngoing());
-        project.setDueDate(projectCreationDTO.getDueDate());
-        project.setDescription(projectCreationDTO.getBrief());
-        project.setStatus(projectCreationDTO.getStatus());
-        project.setCreatedOn(LocalDate.now());
-
-        Team team = new Team();
-
-        team.setProjectId(project.getId());
-        team.setName(project.getName()+" Team");
-        team.setCompanyId(projectCreationDTO.getCompanyId());
-        // TODO - Pegar emails dos membros para realizar o convite!
+        // Creating the team for the project
+        Team team = new Team(null, saveProject.getName()+" Team", saveProject.getId(), saveProject.getCompanyId());
         teamRepository.save(team);
 
-        return mapperUtil.mapTo(project, ProjectDTO.class);
+        TeamMember teamMember = new TeamMember(jwtGenerator.getUserIdFromToken(token), team.getId(), null, null);
+        teamMemberRepository.save(teamMember);
+
+        return mapperUtil.mapTo(saveProject, ProjectDTO.class);
     }
 }

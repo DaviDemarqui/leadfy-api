@@ -53,18 +53,7 @@ public class ClientService {
             Client pDTO = mapperUtil.mapTo(clientDTO, Client.class);
             BeanUtils.copyProperties(pDTO, clientSave, "id");
         } else {
-            //Creating the project for the client
-            Project project = new Project();
-            project.setCompanyId(clientDTO.getCompanyId());
-            project.setStatus(true);
-            project.setCreatedOn(LocalDate.now());
-            project.setName(clientDTO.getName());
-            project.setOngoing(true);
-            project.setDueDate(LocalDate.now().plusWeeks(1));
-
-            projectRepository.save(project);
             clientSave = mapperUtil.mapTo(clientDTO, Client.class);
-            clientSave.setProjectId(project.getId());
         };
         return mapperUtil.mapTo(clientRepository.save(clientSave), ClientDTO.class);
     }

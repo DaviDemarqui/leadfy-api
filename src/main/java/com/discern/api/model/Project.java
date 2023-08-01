@@ -1,5 +1,6 @@
 package com.discern.api.model;
 
+import com.discern.api.enums.ProjectType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,7 +37,7 @@ public class Project {
     private LocalDate dueDate;
 
     @Column
-    private Boolean ongoing;
+    private Boolean timeTracking;
 
     @Column
     private LocalDate createdOn;
@@ -44,6 +45,15 @@ public class Project {
     @Column
     private Boolean status;
 
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ProjectType type;
+
+    private Long manager;
+
     @Column(name = "company_id")
     private Long companyId;
+
+    @Column(name = "created_by")
+    private Long createdBy;
 }

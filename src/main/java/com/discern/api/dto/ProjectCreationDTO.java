@@ -1,9 +1,12 @@
 package com.discern.api.dto;
 
+import com.discern.api.enums.ProjectType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.time.LocalDate;
 
 
@@ -19,8 +22,10 @@ public class ProjectCreationDTO {
 
     private String name;
     private String brief;
-    private String members;
-    private String tag;
+    private String manager;
+
+    @Enumerated(EnumType.STRING)
+    private ProjectType type;
     private Boolean status;
     private LocalDate dueDate;
     private Boolean ongoing;
