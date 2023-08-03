@@ -41,12 +41,11 @@ VALUES
 ALTER TABLE `project`
     ADD COLUMN `type` VARCHAR(255) NOT NULL AFTER `status`,
     ADD COLUMN `manager` BIGINT UNSIGNED NOT NULL AFTER `company_id`,
-    ADD COLUMN `created_by` BIGINT UNSIGNED NOT NULL AFTER `manager`
+    ADD COLUMN `created_by` BIGINT UNSIGNED NOT NULL AFTER `manager`,
     ADD COLUMN `time_tracking` TINYINT(1) NOT NULL DEFAULT FALSE,
     CHANGE COLUMN `due_date` `due_date` DATE NULL,
-    CHANGE COLUMN `created_on` `created_on` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     DROP COLUMN `ongoing`;
 
 ALTER TABLE `client`
     CHANGE COLUMN `project_id` `project_id` BIGINT UNSIGNED NULL,
-    ADD COLUMN `created_by` BIGINT UNSIGNED NOT NULL AFTER `manager`;
+    ADD COLUMN `created_by` BIGINT UNSIGNED NOT NULL;

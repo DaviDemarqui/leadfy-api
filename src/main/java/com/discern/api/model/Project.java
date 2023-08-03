@@ -11,6 +11,7 @@ import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -40,7 +41,7 @@ public class Project {
     private Boolean timeTracking;
 
     @Column
-    private LocalDate createdOn;
+    private LocalDateTime createdOn;
 
     @Column
     private Boolean status;
@@ -53,6 +54,9 @@ public class Project {
 
     @Column(name = "company_id")
     private Long companyId;
+
+    @Column(name = "client_id")
+    private Long clientId;
 
     @Column(name = "created_by")
     private Long createdBy;

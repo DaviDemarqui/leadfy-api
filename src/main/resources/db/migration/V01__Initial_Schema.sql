@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `company`(
     `email` VARCHAR(255) NOT NULL,
     `industry` VARCHAR(255) NULL,
     `phone` VARCHAR(255) NOT NULL,
-    `created_on` DATETIME NOT NULL,
+    `created_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `cnpj` VARCHAR(255) NOT NULL,
     `address` VARCHAR(255) NOT NULL
 );
@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS `task`(
     `details` VARCHAR(255) NOT NULL,
     `priority` VARCHAR(255) NOT NULL,
     `created_by` BIGINT UNSIGNED NOT NULL,
+    `created_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `assign_to` BIGINT UNSIGNED NOT NULL,
     `due_date` DATETIME NOT NULL,
     `status` TINYINT(1) NOT NULL,
@@ -35,11 +36,13 @@ CREATE TABLE IF NOT EXISTS `profile`(
     `user_id` BIGINT UNSIGNED NOT NULL,
     `profile_pic` BLOB NULL,
     `company_id` BIGINT UNSIGNED NOT NULL,
+    `created_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `status` TINYINT(1) NOT NULL
 );
 CREATE TABLE IF NOT EXISTS `team`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
+    `created_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `project_id` BIGINT UNSIGNED NOT NULL
 );
 CREATE TABLE IF NOT EXISTS `team_member` (
@@ -57,7 +60,9 @@ CREATE TABLE IF NOT EXISTS `client`(
     `email` VARCHAR(255) NULL,
     `phone` VARCHAR(255) NOT NULL,
     `invite_message` VARCHAR(255) NOT NULL,
-    `project_id` BIGINT UNSIGNED NOT NULL
+    `created_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `project_id` BIGINT UNSIGNED NOT NULL,
+    `client_id` BIGINT UNSIGNED NULL
 );
 CREATE TABLE IF NOT EXISTS `role`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -69,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `project`(
     `description` VARCHAR(255) NULL,
     `due_date` DATETIME NOT NULL,
     `ongoing` TINYINT(1) NOT NULL,
-    `created_on` DATETIME NOT NULL,
+    `created_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `status` TINYINT(1) NOT NULL,
     `company_id` BIGINT UNSIGNED NOT NULL
 );
@@ -78,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `note`(
     `title` VARCHAR(255) NOT NULL,
     `text` VARCHAR(255) NOT NULL,
     `created_by` BIGINT NOT NULL,
-    `created_on` DATETIME NOT NULL,
+    `created_on` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `project_id` BIGINT UNSIGNED NOT NULL
 );
 ALTER TABLE
@@ -93,5 +98,7 @@ ALTER TABLE
     `profile` ADD CONSTRAINT `profile_company_id_foreign` FOREIGN KEY(`company_id`) REFERENCES `company`(`id`);
 ALTER TABLE
     `project` ADD CONSTRAINT `project_company_id_foreign` FOREIGN KEY(`company_id`) REFERENCES `company`(`id`);
+ALTER TABLE
+    `project` ADD CONSTRAINT `project_client_id_foreign` FOREIGN KEY(`client_id`) REFERENCES `client`(`id`);
 ALTER TABLE
     `team` ADD CONSTRAINT `team_project_id_foreign` FOREIGN KEY(`project_id`) REFERENCES `project`(`id`);
