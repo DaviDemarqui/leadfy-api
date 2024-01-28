@@ -14,22 +14,6 @@ LEFT JOIN
 GROUP BY 
     p.id;
 
-ALTER TABLE task MODIFY COLUMN status VARCHAR(255);
-
-ALTER TABLE profile DROP COLUMN profile_pic;
-
-ALTER TABLE client DROP COLUMN photo;
-
-ALTER TABLE note MODIFY COLUMN text LONGTEXT NOT NULL ;
-
-ALTER TABLE `note`
-    ADD COLUMN note_type ENUM('PERSONAL', 'PROJECT') NOT NULL;
-
--- Adicionar enum de status
-ALTER TABLE `task`
-    MODIFY COLUMN `status` ENUM('TO_DO', 'IN_PROGRESS', 'COMPLETED', 'MISSED_DEADLINE') NOT NULL,
-    MODIFY COLUMN details LONGTEXT NOT NULL;
-
 -- Criar evento para atualizar o status quando a data de vencimento for atingida
 DELIMITER //
 CREATE EVENT IF NOT EXISTS `update_task_status`

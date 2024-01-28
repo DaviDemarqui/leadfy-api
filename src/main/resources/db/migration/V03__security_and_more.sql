@@ -45,7 +45,3 @@ ALTER TABLE `project`
     ADD COLUMN `time_tracking` TINYINT(1) NOT NULL DEFAULT FALSE,
     CHANGE COLUMN `due_date` `due_date` DATE NULL,
     DROP COLUMN `ongoing`;
-
-ALTER TABLE `client`
-    CHANGE COLUMN `project_id` `project_id` BIGINT UNSIGNED NULL,
-    ADD COLUMN `created_by` BIGINT UNSIGNED NOT NULL;
